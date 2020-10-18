@@ -1,16 +1,23 @@
 version: "3.8"
 
 services:
-  db:
-    image: postgres:13.0-alpine
-    env_file: ./.env
-  backend:
-    build: .
-    command: python manage.py runserver 0.0.0.0:8001
-    volumes:
-      - .:/code
-    ports:
-      - "8001:8001"
-    depends_on:
-      - db
-    env_file: .env
+    db:
+        image: postgres:13.0-alpine
+        environment:
+            - POSTGRES_DATABASE=postgres
+            - POSTGRES_HOST=db
+            - POSTGRES_PASSWORD=postgres
+            - POSTGRES_PORT="5432"
+            - POSTGRES_USER=postgres
+        ports:
+            - "5432:5432"
+    backend:
+        build: .
+        command: python manage.py runserver 0.0.0.0:8001
+        volumes:
+            - .:/code
+        ports:
+            - "8001:8001"
+        depends_on:
+            - db
+        env_file: .env
